@@ -69,24 +69,24 @@ public class DataInitializer implements CommandLineRunner {
         if (candidateRepository.count() == 0) {
             // Create sample candidates
             Candidate candidate1 = new Candidate();
-            candidate1.setName("John Smith");
-            candidate1.setParty("Democratic Party");
+            candidate1.setName("Bola Tinubu");
+            candidate1.setParty("APC");
             candidate1.setPosition("President");
-            candidate1.setImageUrl("https://via.placeholder.com/150");
+            candidate1.setImageUrl("https://lh3.googleusercontent.com/Qxgqq7C6s0F6syOCGcLnpIGyTkykAoZbvV6M2SKBJqGW2eEqEp17zpW19UPrzO7J7EOY9dM=s85");
             candidateRepository.save(candidate1);
             
             Candidate candidate2 = new Candidate();
-            candidate2.setName("Jane Doe");
-            candidate2.setParty("Republican Party");
+            candidate2.setName("Peter Obi");
+            candidate2.setParty("Labour Party");
             candidate2.setPosition("President");
-            candidate2.setImageUrl("https://via.placeholder.com/150");
+            candidate2.setImageUrl("https://i0.wp.com/media.premiumtimesng.com/wp-content/files/2022/10/78f1dc4e-142f-44e4-a328-f15724fe63d4_peter-obi.jpg?fit=2252%2C1312&ssl=1");
             candidateRepository.save(candidate2);
             
             Candidate candidate3 = new Candidate();
-            candidate3.setName("Michael Johnson");
+            candidate3.setName("Atiku Abubaka");
             candidate3.setParty("Independent");
             candidate3.setPosition("President");
-            candidate3.setImageUrl("https://via.placeholder.com/150");
+            candidate3.setImageUrl("https://i0.wp.com/media.premiumtimesng.com/wp-content/files/2022/03/E2lCUSsXEAIViLc.jpg?fit=2256%2C1504&ssl=1");
             candidateRepository.save(candidate3);
         }
     }
