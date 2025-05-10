@@ -6,26 +6,26 @@ import com.voting.app.dto.response.CandidateResponse;
 import com.voting.app.mapper.CandidateMapper;
 import com.voting.app.model.Candidate;
 import com.voting.app.repository.CandidateRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CandidateService {
-    @Autowired
-    private CandidateRepository candidateRepository;
+    private final CandidateRepository candidateRepository;
 
-    @Autowired
-    private CandidateMapper candidateMapper;
+    private final CandidateMapper candidateMapper;
 
     public List<CandidateResponse> getAllCandidates() {
         List<Candidate> candidates = candidateRepository.findAll();
         return candidates.stream()
                 .map(candidate -> {
                     CandidateResponse response = candidateMapper.toResponse(candidate);
-                    // No vote counts in basic list
+                    // No vote counts in a basic list
                     response.setVoteCount(0L);
                     return response;
                 })
@@ -35,7 +35,7 @@ public class CandidateService {
     public CandidateResponse getCandidateById(Long id) {
         Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate not found with id: " + id));
-        
+
         CandidateResponse response = candidateMapper.toResponse(candidate);
         response.setVoteCount(0L); // No vote count in single candidate view
         return response;

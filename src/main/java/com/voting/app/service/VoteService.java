@@ -13,6 +13,7 @@ import com.voting.app.model.Vote;
 import com.voting.app.repository.CandidateRepository;
 import com.voting.app.repository.UserRepository;
 import com.voting.app.repository.VoteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,40 +25,36 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class VoteService {
-    @Autowired
-    private VoteRepository voteRepository;
+    private final VoteRepository voteRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    private final CandidateRepository candidateRepository;
 
-    @Autowired
-    private CandidateMapper candidateMapper;
+    private final CandidateMapper candidateMapper;
 
-    @Autowired
-    private VoteMapper voteMapper;
+    private final VoteMapper voteMapper;
 
     @Transactional
     public VoteResponse castVote(VoteRequest voteRequest) {
         User voter = userRepository.findById(voteRequest.getVoterId())
                 .orElseThrow(() -> new RuntimeException("Voter not found with id: " + voteRequest.getVoterId()));
-        
+
         if (voteRepository.existsByVoter(voter)) {
             throw new RuntimeException("Voter has already cast a vote");
         }
-        
+
         Candidate candidate = candidateRepository.findById(voteRequest.getCandidateId())
                 .orElseThrow(() -> new RuntimeException("Candidate not found with id: " + voteRequest.getCandidateId()));
-        
+
         Vote vote = new Vote();
         vote.setVoter(voter);
         vote.setCandidate(candidate);
         vote.setTimestamp(LocalDateTime.now());
-        
+
         Vote savedVote = voteRepository.save(vote);
         return voteMapper.toResponse(savedVote);
     }
@@ -65,14 +62,14 @@ public class VoteService {
     public List<CandidateResponse> getVoteResults() {
         List<Candidate> candidates = candidateRepository.findAll();
         Map<Long, Long> voteCounts = new HashMap<>();
-        
+
         // Count votes for each candidate
         voteRepository.countVotesByCandidate().forEach(result -> {
             Long candidateId = ((Number) result[0]).longValue();
             Long count = ((Number) result[1]).longValue();
             voteCounts.put(candidateId, count);
         });
-        
+
         return candidates.stream()
                 .map(candidate -> {
                     CandidateResponse response = candidateMapper.toResponse(candidate);
@@ -85,9 +82,9 @@ public class VoteService {
     public VoteStatusResponse checkVoterStatus(Long voterId) {
         User voter = userRepository.findById(voterId)
                 .orElseThrow(() -> new RuntimeException("Voter not found with id: " + voterId));
-        
+
         Optional<Vote> vote = voteRepository.findByVoter(voter);
-        
+
         if (vote.isPresent()) {
             return new VoteStatusResponse(true, vote.get().getCandidate().getId().toString());
         } else {

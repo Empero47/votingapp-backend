@@ -1,3 +1,3 @@
 spring:
   profiles:
-    active: dev  # Activate dev profile for development
+    active: prod, dev  # Activate dev profile for development

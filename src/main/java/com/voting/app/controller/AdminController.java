@@ -6,6 +6,7 @@ import com.voting.app.dto.response.CandidateResponse;
 import com.voting.app.dto.response.MessageResponse;
 import com.voting.app.service.CandidateService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
-    @Autowired
-    private CandidateService candidateService;
+    private final CandidateService candidateService;
     
     @GetMapping("/candidates")
     public ResponseEntity<List<CandidateResponse>> getAllCandidates() {

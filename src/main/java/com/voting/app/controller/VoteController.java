@@ -7,6 +7,7 @@ import com.voting.app.dto.response.VoteResponse;
 import com.voting.app.dto.response.VoteStatusResponse;
 import com.voting.app.service.VoteService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/votes")
 public class VoteController {
-    @Autowired
-    private VoteService voteService;
+    private final VoteService voteService;
     
     @PostMapping
     public ResponseEntity<VoteResponse> castVote(@Valid @RequestBody VoteRequest voteRequest) {
