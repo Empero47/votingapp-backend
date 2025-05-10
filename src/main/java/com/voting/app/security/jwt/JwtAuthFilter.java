@@ -1,4 +1,3 @@
-
 package com.voting.app.security.jwt;
 
 import jakarta.servlet.FilterChain;
@@ -35,7 +34,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            email = jwtUtils.extractEmail(token);
+
+            // Defensive check for proper JWT format (must contain 2 periods)
+            if (token.chars().filter(ch -> ch == '.').count() == 2) {
+                try {
+                    email = jwtUtils.extractEmail(token);
+                } catch (Exception e) {
+                    log.error("Failed to extract email from token: {}", e.getMessage());
+                }
+            } else {
+                log.error("Invalid JWT format. Token: {}", token);
+            }
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
